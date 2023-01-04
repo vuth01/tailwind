@@ -1,24 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import { Content } from "./components/Content";
+import { NavBar } from "./components/NavBar";
+import { Slogan } from "./components/Slogan";
 
 function App() {
+  const [windowSize, setWindowSize] = useState<any>({
+    width: undefined,
+    height: undefined,
+  });
+
+  const [isMobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const handleSize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    window.addEventListener("resize", handleSize);
+    handleSize();
+    return () => window.removeEventListener("resize", handleSize);
+  }, []);
+
+  useEffect(() => {
+    if (windowSize.width < 768) {
+      setMobile(true);
+    } else {
+      setMobile(false);
+    }
+  }, [windowSize]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      className="md:px-8 font-sora overflow-y-auto overflow-x-hidden text-white h-screen px-4 py-8 
+    bg-gradient-to-b dark:from-purple-900 dark:to-purple-500 dark:text-white from-white text-black to-pink-500 "
+    >
+      <NavBar isMobile={isMobile} />
+      <Slogan />
+      <Content />
     </div>
   );
 }
